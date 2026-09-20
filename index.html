@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vela · 用藥提醒 POC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header with Vela Kept Light status -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="light-icon" id="lightIndicator" title="守護之燈狀態">🕯️</span>
+        <div class="brand-text">
+          <h1>Vela</h1>
+          <p class="brand-tagline">為家人點一盞守護之燈</p>
+        </div>
+      </div>
+      <div class="header-badge" id="todayProgressBadge">0 / 3 已服用</div>
+    </header>
+
+    <!-- Date & Greeting Banner -->
+    <section class="banner-card">
+      <div class="banner-date" id="currentDateStr">載入中...</div>
+      <h2 class="banner-greeting" id="greetingText">早安，今天也要照顧好身體</h2>
+      <p class="banner-sub" id="bannerSubText">點擊下方按鈕即可記錄服藥，遠端家人也能即時收到安心通知。</p>
+    </section>
+
+    <!-- Light Status Bar -->
+    <section class="light-card" id="lightCard">
+      <div class="light-orb" id="lightOrb"></div>
+      <div class="light-info">
+        <div class="light-title" id="lightTitle">今日守護燈：等待用藥</div>
+        <div class="light-desc" id="lightDesc">長輩完成用藥時，微光將會點亮並向家人報平安。</div>
+      </div>
+    </section>
+
+    <!-- Main Medicine Checklist -->
+    <main class="main-content">
+      <div class="section-title-row">
+        <h3>今日用藥排程</h3>
+        <button type="button" class="btn-text" id="openAddModalBtn">+ 新增用藥</button>
+      </div>
+
+      <div class="med-list" id="medList">
+        <!-- Medication cards will be rendered dynamically by app.js -->
+      </div>
+    </main>
+
+    <!-- Family Reflection / Philosophy Note -->
+    <footer class="app-footer">
+      <div class="family-card">
+        <span class="family-icon">🌱</span>
+        <div class="family-text">
+          <strong>非監控式守護</strong>
+          <p>長輩只需點按即可回報，無需安裝複雜軟體；子女在手機上看見微光亮起，彼此都安心。</p>
+        </div>
+      </div>
+      <div class="footer-actions">
+        <button type="button" class="btn-secondary btn-sm" id="resetTodayBtn">重設今日狀態（測試用）</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Add Medicine Modal -->
+  <div class="modal-overlay" id="addModal" hidden>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h4>新增用藥提醒</h4>
+        <button type="button" class="btn-close" id="closeAddModalBtn" aria-label="關閉">&times;</button>
+      </div>
+      <form id="addMedForm">
+        <div class="form-group">
+          <label for="medName">藥品 / 保健品名稱</label>
+          <input type="text" id="medName" required placeholder="例如：降血壓藥、維他命 C">
+        </div>
+        <div class="form-group">
+          <label for="medTime">提醒時間</label>
+          <input type="time" id="medTime" required value="08:00">
+        </div>
+        <div class="form-group">
+          <label for="medNotes">服用劑量與說明</label>
+          <input type="text" id="medNotes" placeholder="例如：飯後 1 顆，溫水送服">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="cancelAddBtn">取消</button>
+          <button type="submit" class="btn-primary">儲存提醒</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
