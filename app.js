@@ -1,28 +1,28 @@
-// Vela Medicine Reminder POC
-const STORAGE_KEY = "vela_medications_v1";
+// Vela Medicine Reminder POC - English Edition
+const STORAGE_KEY = "vela_medications_v2";
 
 const DEFAULT_MEDS = [
   {
     id: "med-1",
-    name: "降血壓藥 (Amlodipine)",
+    name: "Blood pressure (Amlodipine)",
     time: "08:00",
-    notes: "早上飯後 1 顆，請配溫開水",
+    notes: "1 tablet after breakfast with warm water",
     taken: false,
     takenAt: null
   },
   {
     id: "med-2",
-    name: "胃藥 (Pantoprazole)",
+    name: "Stomach relief (Pantoprazole)",
     time: "12:30",
-    notes: "午餐前 30 分鐘服用 1 包",
+    notes: "1 capsule 30 minutes before lunch",
     taken: false,
     takenAt: null
   },
   {
     id: "med-3",
-    name: "維他命 D 與鈣片",
+    name: "Vitamin D & Calcium",
     time: "20:00",
-    notes: "晚餐後 2 顆",
+    notes: "2 tablets after dinner",
     taken: false,
     takenAt: null
   }
@@ -59,22 +59,18 @@ function saveMedications() {
 
 function renderDateAndGreeting() {
   const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
-  const date = now.getDate();
-  const days = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
-  const dayName = days[now.getDay()];
-  const dateStr = `${year} 年 ${month} 月 ${date} 日 · ${dayName}`;
+  const options = { weekday: "long", month: "short", day: "numeric" };
+  const dateStr = now.toLocaleDateString("en-US", options);
   document.getElementById("currentDateStr").textContent = dateStr;
 
   const hour = now.getHours();
   const greetingEl = document.getElementById("greetingText");
-  if (hour < 11) {
-    greetingEl.textContent = "早安，今天也要照顧好身體";
-  } else if (hour < 17) {
-    greetingEl.textContent = "午安，記得午餐後補充水分與用藥";
+  if (hour < 12) {
+    greetingEl.textContent = "Good morning · Take good care today";
+  } else if (hour < 18) {
+    greetingEl.textContent = "Good afternoon · Stay hydrated & well";
   } else {
-    greetingEl.textContent = "晚安，願您今晚有個溫暖好眠";
+    greetingEl.textContent = "Good evening · Rest well tonight";
   }
 }
 
@@ -99,21 +95,21 @@ function renderList() {
           <span>⏰</span> ${escapeHtml(med.time)}
         </span>
         <div class="med-actions-top">
-          <button type="button" class="btn-icon" title="語音朗讀提醒" aria-label="朗讀" data-action="speak" data-id="${med.id}">
+          <button type="button" class="btn-icon" title="Read reminder aloud" aria-label="Read aloud" data-action="speak" data-id="${med.id}">
             🔊
           </button>
-          <button type="button" class="btn-icon" title="刪除此用藥" aria-label="刪除" data-action="delete" data-id="${med.id}">
+          <button type="button" class="btn-icon" title="Delete reminder" aria-label="Delete" data-action="delete" data-id="${med.id}">
             🗑️
           </button>
         </div>
       </div>
       <div class="med-body">
         <h4 class="med-name">${escapeHtml(med.name)}</h4>
-        <p class="med-notes">${escapeHtml(med.notes || "按時服用")}</p>
-        ${med.taken && med.takenAt ? `<div class="med-taken-time"><span>✓</span> 已於 ${escapeHtml(med.takenAt)} 服用</div>` : ""}
+        <p class="med-notes">${escapeHtml(med.notes || "Take as directed")}</p>
+        ${med.taken && med.takenAt ? `<div class="med-taken-time"><span>✓</span> Taken at ${escapeHtml(med.takenAt)}</div>` : ""}
       </div>
       <button type="button" class="btn-toggle-taken ${med.taken ? "checked" : "uncheck"}" data-action="toggle" data-id="${med.id}">
-        ${med.taken ? "✓ 已服用（點擊可取消）" : "✔️ 點擊標記已服用"}
+        ${med.taken ? "✓ Taken (tap to undo)" : "Tap to mark as taken"}
       </button>
     `;
 
@@ -130,23 +126,23 @@ function updateLightStatus(taken, total) {
   const lightDesc = document.getElementById("lightDesc");
   const bannerSub = document.getElementById("bannerSubText");
 
-  badge.textContent = `${taken} / ${total} 已服用`;
+  badge.textContent = `${taken} of ${total} taken`;
 
   if (total > 0 && taken === total) {
     lightCard.classList.add("all-done");
-    lightTitle.textContent = "今日守護燈已點亮 ✨";
-    lightDesc.textContent = "今日排程已全數完成，遠方家人已收到點燈報平安通知！";
-    bannerSub.textContent = "太棒了！今日用藥已全數完成，安心無憂。";
+    lightTitle.textContent = "Today's Light: Turned on ✨";
+    lightDesc.textContent = "All medicine taken for today. The family knows Mom is fine!";
+    bannerSub.textContent = "Wonderful! Today's medicine is all taken. Peace of mind for everyone.";
   } else if (taken > 0) {
     lightCard.classList.remove("all-done");
-    lightTitle.textContent = `今日守護燈：已完成 ${taken} / ${total}`;
-    lightDesc.textContent = "持續用藥中，完成後微光將會全數點亮。";
-    bannerSub.textContent = "點擊按鈕即可記錄服藥，遠端家人也能即時收到安心通知。";
+    lightTitle.textContent = `Today's Light: ${taken} of ${total} taken`;
+    lightDesc.textContent = "Keep going! Once finished, the light will turn on completely.";
+    bannerSub.textContent = "One tap marks your medicine as taken. The family sees your light come on.";
   } else {
     lightCard.classList.remove("all-done");
-    lightTitle.textContent = "今日守護燈：等待用藥";
-    lightDesc.textContent = "長輩完成用藥時，微光將會點亮並向家人報平安。";
-    bannerSub.textContent = "點擊按鈕即可記錄服藥，遠端家人也能即時收到安心通知。";
+    lightTitle.textContent = "Today's Light: Waiting for medicine";
+    lightDesc.textContent = "When morning medicine is taken, your light turns on for the family.";
+    bannerSub.textContent = "One tap marks your medicine as taken. The family sees your light come on.";
   }
 }
 
@@ -157,7 +153,7 @@ function toggleMedication(id) {
   med.taken = !med.taken;
   if (med.taken) {
     const now = new Date();
-    const timeStr = now.toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit", hour12: false });
+    const timeStr = now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
     med.takenAt = timeStr;
     playGentleChime();
   } else {
@@ -171,7 +167,7 @@ function toggleMedication(id) {
 function deleteMedication(id) {
   const med = medications.find((m) => m.id === id);
   if (!med) return;
-  if (confirm(`確定要刪除「${med.name}」的提醒嗎？`)) {
+  if (confirm(`Are you sure you want to remove the reminder for "${med.name}"?`)) {
     medications = medications.filter((m) => m.id !== id);
     saveMedications();
     renderList();
@@ -183,14 +179,14 @@ function speakMedication(id) {
   if (!med) return;
 
   if (!("speechSynthesis" in window)) {
-    alert("您的瀏覽器暫不支援語音合成功能。");
+    alert("Speech synthesis is not supported in this browser.");
     return;
   }
 
   window.speechSynthesis.cancel();
-  const text = `提醒您，時間 ${med.time}，請記得服用 ${med.name}。說明：${med.notes || "按時服用"}`;
+  const text = `Reminder for ${med.time}. Please take ${med.name}. Instructions: ${med.notes || "Take as directed"}`;
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "zh-TW";
+  utterance.lang = "en-US";
   utterance.rate = 0.9;
   window.speechSynthesis.speak(utterance);
 }
@@ -280,7 +276,7 @@ function setupEventListeners() {
       id: "med-" + Date.now(),
       name,
       time,
-      notes: notes || "按時服用",
+      notes: notes || "Take as directed",
       taken: false,
       takenAt: null
     };
