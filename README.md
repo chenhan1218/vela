@@ -50,29 +50,20 @@ npx serve .
 
 ---
 
+## 🌐 線上即時體驗 (Live Demo)
+
+- **GitHub Pages 體驗網址**：[https://chenhan1218.github.io/vela/](https://chenhan1218.github.io/vela/)
+- **GitHub 專案倉庫**：[https://github.com/chenhan1218/vela](https://github.com/chenhan1218/vela)
+
+---
+
 ## 📂 專案結構
 
 ```
-vela-poc/
+vela/
 ├── index.html      # 核心結構與語意化標記
 ├── style.css       # Candle & Ink 溫暖視覺設計系統
 ├── app.js          # 用藥狀態管理、語音合成與音效回饋
 └── README.md       # 專案說明文件
 ```
 
----
-
-## 🌐 部署至 GitHub Pages
-
-此專案已是標準的 Git 儲存庫，可直接推送到 GitHub 並開啟 GitHub Pages：
-
-```bash
-# 建立遠端儲存庫並推送 (以 GitHub CLI 為例)
-gh repo create vela-poc --public --source=. --push
-
-# 或手動關聯現有 GitHub 倉庫
-git remote add origin https://github.com/<your-username>/vela-poc.git
-git push -u origin main
-```
-
-推送後，在 GitHub 倉庫的 `Settings` -> `Pages` -> Source 選擇 `Deploy from a branch (main / root)`，即可立即獲得線上公開展示網址。
